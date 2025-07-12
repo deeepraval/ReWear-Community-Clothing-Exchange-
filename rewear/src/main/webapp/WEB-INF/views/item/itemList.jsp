@@ -2,83 +2,104 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.rewear.bean.ItemBean" %>
 
+<!DOCTYPE html>
 <html>
 <head>
     <title>My Uploaded Items</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f9f9f9;
+            background: #f5f7fa;
+            font-family: 'Segoe UI', sans-serif;
         }
+
         h2 {
-            text-align: center;
-            margin-top: 20px;
-        }
-        table {
-            width: 90%;
-            border-collapse: collapse;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            margin-top: 30px;
             text-align: center;
         }
-        th {
-            background-color: #efefef;
+
+        .table-container {
+            margin: 30px auto;
+            width: 95%;
         }
-        img {
-            width: 80px;
+
+        .table {
+            background-color: white;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table th {
+            background-color: #f1f1f1;
+        }
+
+        .table img {
+            width: 75px;
             height: auto;
             border-radius: 4px;
         }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .center {
-            text-align: center;
-            margin-top: 20px;
-        }
+
         .btn {
-            padding: 6px 10px;
-            background-color: #007BFF;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .btn-view {
+            background-color: #0d6efd;
             color: white;
-            border: none;
-            border-radius: 4px;
-            margin: 2px;
-            cursor: pointer;
         }
-        .btn:hover {
-            background-color: #0056b3;
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: black;
         }
+
         .btn-delete {
             background-color: #dc3545;
+            color: white;
         }
-        .btn-delete:hover {
-            background-color: #a71d2a;
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .add-btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            background-color: #198754;
+            color: white;
+            text-decoration: none;
+        }
+
+        .add-btn:hover {
+            background-color: #146c43;
         }
     </style>
 </head>
 <body>
 
-<h2>🧾 My Uploaded Items</h2>
+<jsp:include page="../common/nav.jsp" />
+
+<h2><i class="bi bi-box-seam"></i> My Uploaded Items</h2>
 
 <%
     List<ItemBean> items = (List<ItemBean>) request.getAttribute("items");
-    if (items == null || items.isEmpty()) {
 %>
-    <p class="center">No items found.</p>
-<%
-    } else {
-%>
-    <table>
-        <thead>
+
+<div class="table-container">
+<% if (items == null || items.isEmpty()) { %>
+    <div class="text-center fs-5 mt-5">No items found.</div>
+<% } else { %>
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-light">
             <tr>
                 <th>Image</th>
                 <th>Name</th>
@@ -91,13 +112,9 @@
             </tr>
         </thead>
         <tbody>
-<%
-        for (ItemBean item : items) {
-%>
+        <% for (ItemBean item : items) { %>
             <tr>
-                <td>
-                    <img src="<%= request.getContextPath() + "/uploads/" + item.getImage() %>" alt="Image" />
-                </td>
+                <td><img src="<%= request.getContextPath() + "/uploads/" + item.getImage() %>" alt="Image" /></td>
                 <td><%= item.getName() %></td>
                 <td><%= item.getDescription() %></td>
                 <td><%= item.getCategory() %></td>
@@ -105,24 +122,27 @@
                 <td><%= item.getCondition() %></td>
                 <td><%= item.getCreatedAt() %></td>
                 <td>
-                    <a class="btn" href="<%= request.getContextPath() + "/item/" + item.getId() %>">View</a>
-                    <a class="btn" href="<%= request.getContextPath() + "/item/edit?id=" + item.getId() %>">Edit</a>
-                    <a class="btn btn-delete" href="<%= request.getContextPath() + "/item/delete?id=" + item.getId() %>" 
-                        onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+                    <a class="btn btn-view" href="<%= request.getContextPath() + "/item/" + item.getId() %>">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a class="btn btn-edit" href="<%= request.getContextPath() + "/item/edit?id=" + item.getId() %>">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <a class="btn btn-delete" href="<%= request.getContextPath() + "/item/delete?id=" + item.getId() %>"
+                       onclick="return confirm('Are you sure you want to delete this item?')">
+                        <i class="bi bi-trash3"></i>
+                    </a>
                 </td>
             </tr>
-<%
-        }
-%>
+        <% } %>
         </tbody>
     </table>
-<%
-    }
-%>
-
-<div class="center">
-    <a class="btn" href="<%= request.getContextPath() + "/item/add" %>">➕ Add New Item</a>
+<% } %>
 </div>
+
+<a class="add-btn" href="<%= request.getContextPath() + "/item/add" %>"><i class="bi bi-plus-circle"></i> Add New Item</a>
+
+<jsp:include page="../common/footer.jsp" />
 
 </body>
 </html>
