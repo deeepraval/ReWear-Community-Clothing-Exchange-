@@ -30,7 +30,7 @@ public class ImageUploadUtil {
         String uniqueFileName = UUID.randomUUID() + "." + extension;
 
         // ✅ Runtime-safe absolute path (inside project folder)
-        String uploadDir = new File("uploads").getAbsolutePath();
+        String uploadDir = new File("src/main/webapp/uploads").getAbsolutePath();
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             dir.mkdirs();

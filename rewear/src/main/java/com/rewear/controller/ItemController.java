@@ -5,6 +5,8 @@ import com.rewear.util.ViewPaths;
 import com.rewear.dao.ItemDao;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,6 +50,15 @@ public class ItemController {
         return "redirect:/dashboard";
     }
 
+    @GetMapping("/item/list")
+    public String showItems(Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) return "redirect:/login";
+
+        List<ItemBean> items = itemDao.getItemsByUserId(userId);
+        model.addAttribute("items", items);
+        return ViewPaths.ITEM_LIST;
+    }
 
 
 }
