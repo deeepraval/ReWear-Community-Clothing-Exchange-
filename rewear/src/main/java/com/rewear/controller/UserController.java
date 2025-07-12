@@ -21,7 +21,6 @@ public class UserController {
     // Show registration form
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
-    	System.out.println("✅ Entered /register controller method");
         model.addAttribute("user", new UserBean());
         return ViewPaths.USER_REGISTER;  // maps to /WEB-INF/views/user/register.jsp
     }
@@ -34,19 +33,17 @@ public class UserController {
             BindingResult result,
             Model model
     ) {
-        // Log error count for debugging
-        System.out.println("Validation errors: " + result.getErrorCount());
-
-        // If validation fails, return back to form with errors
         if (result.hasErrors()) {
-            model.addAttribute("errors", result); // ✅ pass errors to JSP
-            return ViewPaths.USER_REGISTER;       // → user/register.jsp
+            model.addAttribute("errors", result);
+            return ViewPaths.USER_REGISTER;
         }
 
-        // Save user to DB
-        userDao.addUser(user);
+        // Check for duplicate email
+        if (!userDao.addUser(user)) {
+            model.addAttribute("emailExists", "Email already registered!");
+            return ViewPaths.USER_REGISTER;
+        }
 
-        // Redirect to login after success
         return "redirect:/login";
     }
 
@@ -75,5 +72,4 @@ public class UserController {
             return ViewPaths.USER_LOGIN;
         }
     }
-
 }

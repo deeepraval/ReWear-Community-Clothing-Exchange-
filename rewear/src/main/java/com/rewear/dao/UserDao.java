@@ -19,11 +19,19 @@ public class UserDao {
     PasswordEncoder passwordEncoder;
 
     // ✅ Register user
-    public void addUser(UserBean user) {
+    public boolean addUser(UserBean user) {
+        // Check if user already exists
+        if (isEmailRegistered(user.getEmail())) {
+            return false; // Email already exists
+        }
+
+        // Proceed with insertion
         String sql = "INSERT INTO users (name, email, password, gender, created_at) VALUES (?, ?, ?, ?, NOW())";
         stmt.update(sql, user.getName(), user.getEmail(),
                 passwordEncoder.encode(user.getPassword()), user.getGender());
+        return true;
     }
+
 
     // ✅ Get all users
     public List<UserBean> getAllUsers() {

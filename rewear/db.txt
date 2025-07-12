@@ -1,3 +1,6 @@
+CREATE DATABASE rewear;
+USE rewear;
+
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -7,3 +10,5 @@ CREATE TABLE users (
     created_at DATETIME NOT NULL,
     last_login DATETIME
 );
+
+
