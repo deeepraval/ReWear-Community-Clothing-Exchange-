@@ -60,5 +60,15 @@ public class ItemController {
         return ViewPaths.ITEM_LIST;
     }
 
+    @GetMapping("/item/{id}")
+    public String viewItem(@PathVariable("id") Long itemId, Model model) {
+        ItemBean item = itemDao.getItemById(itemId);
+        if (item == null) {
+            return ViewPaths.ERROR_404;
+        }
+        model.addAttribute("item", item);
+        return ViewPaths.ITEM_DETAIL; // item/itemDetail.jsp
+    }
+
 
 }

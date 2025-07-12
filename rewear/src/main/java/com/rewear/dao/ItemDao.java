@@ -25,4 +25,14 @@ public class ItemDao {
         String sql = "SELECT * FROM items WHERE user_id = ? ORDER BY created_at DESC";
         return stmt.query(sql, new BeanPropertyRowMapper<>(ItemBean.class), userId);
     }
+    
+    public ItemBean getItemById(Long id) {
+        String sql = "SELECT * FROM items WHERE id = ?";
+        try {
+            return stmt.queryForObject(sql, new BeanPropertyRowMapper<>(ItemBean.class), id);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
