@@ -5,17 +5,17 @@
     String userName = (String) session.getAttribute("userName");
     List<ItemBean> items = (List<ItemBean>) request.getAttribute("availableItems");
 %>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>User Dashboard</title>
+    <jsp:include page="../common/Link.jsp" />
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fafafa;
+            background-color: #f2f2f2;
         }
 
         .search-bar {
@@ -25,131 +25,147 @@
 
         .search-bar input[type="text"] {
             width: 60%;
-            padding: 12px;
+            padding: 12px 20px;
             font-size: 16px;
             border: 1px solid #ccc;
-            border-radius: 8px;
+            border-radius: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .brand-banner {
             text-align: center;
-            margin: 20px 0;
         }
 
         .brand-banner img {
-            max-width: 95%;
-            height: auto;
-            border-radius: 10px;
+            width: 95%;
+            max-height: 300px;
+            border-radius: 12px;
+            object-fit: cover;
         }
 
         .category-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 0 10%;
-            margin: 40px 0;
+            gap: 20px;
+            padding: 40px 10%;
         }
 
         .category-item {
-            text-align: center;
-            background-color: #fff;
-            border-radius: 10px;
+            position: relative;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
         .category-item img {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
+            filter: brightness(60%) blur(1px);
         }
 
         .category-item span {
-            display: block;
-            padding: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
             font-weight: bold;
-            background-color: #f8f8f8;
+            color: #fff;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
         }
 
         .item-list {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
         .item-card {
-            width: 220px;
+            width: 240px;
             background: #fff;
-            border: 1px solid #ddd;
+            border-radius: 10px;
             margin: 15px;
             padding: 15px;
             text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
         }
 
         .item-card img {
             width: 100%;
             height: 180px;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
         .item-card h4 {
-            margin: 10px 0 5px;
+            margin: 12px 0 6px;
+            font-size: 18px;
         }
 
         .item-card p {
-            margin: 5px 0 10px;
             font-size: 14px;
-            color: #555;
+            color: #666;
+            margin: 5px 0 10px;
         }
 
         .item-card a {
-            padding: 8px 12px;
-            text-decoration: none;
-            background-color: #333;
+            padding: 8px 14px;
+            background-color: #009879;
             color: #fff;
-            border-radius: 5px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .no-items {
+            text-align: center;
+            padding: 40px;
+            color: #999;
         }
     </style>
 </head>
 <body>
 
-<jsp:include page="/components/navbar.jsp" />
+<jsp:include page="../common/nav.jsp" />
 
 <div class="search-bar">
     <input type="text" placeholder="Search items..." />
 </div>
 
 <div class="brand-banner">
-    <img src="/images/banner.png" alt="Brand Banner" />
+    <img src="${pageContext.request.contextPath}/assets/brand/banner.png" alt="Banner">
 </div>
 
 <div class="category-grid">
     <div class="category-item">
-        <img src="https://images.unsplash.com/photo-1602810310591-46ec73d2f3a8" alt="Tops" />
+        <img src="${pageContext.request.contextPath}/assets/brand/Tops.jpg" alt="Tops" />
         <span>Tops</span>
     </div>
     <div class="category-item">
-        <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246" alt="Bottoms" />
+        <img src="${pageContext.request.contextPath}/assets/brand/Bottoms.jpg" alt="Bottoms" />
         <span>Bottoms</span>
     </div>
     <div class="category-item">
-        <img src="https://images.unsplash.com/photo-1611078489935-88c8e06c9c6a" alt="Dresses" />
+        <img src="${pageContext.request.contextPath}/assets/brand/Dresses.jpg" alt="Dresses" />
         <span>Dresses</span>
     </div>
     <div class="category-item">
-        <img src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126" alt="Outerwear" />
+        <img src="${pageContext.request.contextPath}/assets/brand/Outerwear.jpg" alt="Outerwear" />
         <span>Outerwear</span>
     </div>
     <div class="category-item">
-        <img src="https://images.unsplash.com/photo-1600185365529-b8f3e0654e6f" alt="Accessories" />
+        <img src="${pageContext.request.contextPath}/assets/brand/Accessories.png" alt="Accessories" />
         <span>Accessories</span>
     </div>
     <div class="category-item">
-        <img src="https://images.unsplash.com/photo-1581591524425-4c4e1ec7a6c7" alt="Other" />
+        <img src="${pageContext.request.contextPath}/assets/brand/Other.jpg" alt="Other" />
         <span>Other</span>
     </div>
 </div>
@@ -165,11 +181,13 @@
             </div>
     <%  }
     } else { %>
-        <p>No items available for swap at the moment.</p>
+        <div class="no-items">
+            <p>🚫 No items available for swap at the moment.</p>
+        </div>
     <% } %>
 </div>
 
-<jsp:include page="/common/footer.jsp" />
+<jsp:include page="../common/footer.jsp" />
 
 </body>
 </html>
