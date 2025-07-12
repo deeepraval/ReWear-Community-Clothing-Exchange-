@@ -4,6 +4,8 @@ import com.rewear.bean.UserBean;
 import com.rewear.util.ViewPaths;
 
 import com.rewear.dao.UserDao;
+
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,12 +62,15 @@ public class UserController {
     public String handleLogin(
             @RequestParam("email") String email,
             @RequestParam("password") String password,
+            HttpSession session,
             Model model
     ) {
         boolean valid = userDao.authenticate(email, password);
         
         if (valid) {
-            // TODO: Set session if needed
+        	UserBean user = userDao.getUserByEmail(email);
+        	session.setAttribute("userId", user.getId());
+            session.setAttribute("userName", user.getName());
             return ViewPaths.USER_DASHBOARD; // redirect to dashboard
         } else {
             model.addAttribute("loginError", "Invalid email or password");

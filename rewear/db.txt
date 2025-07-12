@@ -12,3 +12,18 @@ CREATE TABLE users (
 );
 
 
+CREATE TABLE items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,  -- ✅ Match with users.id (which is BIGINT)
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    category VARCHAR(50),
+    size VARCHAR(20),
+    `condition` VARCHAR(50),
+    image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
