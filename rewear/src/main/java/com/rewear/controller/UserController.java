@@ -2,7 +2,6 @@ package com.rewear.controller;
 
 import com.rewear.bean.UserBean;
 import com.rewear.util.ViewPaths;
-
 import com.rewear.dao.UserDao;
 
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-//@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -24,10 +22,9 @@ public class UserController {
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new UserBean());
-        return ViewPaths.USER_REGISTER;  // maps to /WEB-INF/views/user/register.jsp
+        return ViewPaths.USER_REGISTER;
     }
 
-    
     // Handle registration form submission
     @PostMapping("/register")
     public String handleRegister(
@@ -40,7 +37,6 @@ public class UserController {
             return ViewPaths.USER_REGISTER;
         }
 
-        // Check for duplicate email
         if (!userDao.addUser(user)) {
             model.addAttribute("emailExists", "Email already registered!");
             return ViewPaths.USER_REGISTER;
@@ -49,8 +45,7 @@ public class UserController {
         return "redirect:/login";
     }
 
-
- // Show login page
+    // Show login page
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("loginError", "");
@@ -66,15 +61,28 @@ public class UserController {
             Model model
     ) {
         boolean valid = userDao.authenticate(email, password);
-        
+
         if (valid) {
-        	UserBean user = userDao.getUserByEmail(email);
-        	session.setAttribute("userId", user.getId());
+            UserBean user = userDao.getUserByEmail(email);
+            session.setAttribute("userId", user.getId());
             session.setAttribute("userName", user.getName());
-            return ViewPaths.USER_DASHBOARD; // redirect to dashboard
+            session.setAttribute("userEmail", email);
+            return ViewPaths.USER_DASHBOARD;
         } else {
             model.addAttribute("loginError", "Invalid email or password");
             return ViewPaths.USER_LOGIN;
         }
+    }
+
+    // Show user dashboard
+    @GetMapping("/dashboard")
+    public String showDashboard(HttpSession session, Model model) {
+        String email = (String) session.getAttribute("userEmail");
+        if (email == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("userEmail", email);
+        return ViewPaths.USER_DASHBOARD;
     }
 }
