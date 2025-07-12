@@ -69,6 +69,6 @@
 </form>
 
 <br>
-<a href="/item/my">⬅ Back to My Items</a>
+<a href="/item/list">⬅ Back to My Items</a>
 </body>
 </html>
