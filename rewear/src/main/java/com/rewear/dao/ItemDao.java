@@ -34,5 +34,12 @@ public class ItemDao {
             return null;
         }
     }
+    
+    public void updateItem(ItemBean item) {
+        String sql = "UPDATE items SET name=?, description=?, category=?, size=?, `condition`=?, image=? WHERE id=?";
+        stmt.update(sql, item.getName(), item.getDescription(), item.getCategory(),
+                item.getSize(), item.getCondition(), item.getImage(), item.getId());
+    }
+
 
 }

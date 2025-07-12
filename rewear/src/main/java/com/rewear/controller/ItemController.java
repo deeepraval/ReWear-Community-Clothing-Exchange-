@@ -5,6 +5,7 @@ import com.rewear.util.ViewPaths;
 import com.rewear.dao.ItemDao;
 import jakarta.servlet.http.HttpSession;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,42 @@ public class ItemController {
         model.addAttribute("item", item);
         return ViewPaths.ITEM_DETAIL; // item/itemDetail.jsp
     }
+    
+    @GetMapping("/item/edit")
+    public String editItem(@RequestParam("id") long id, Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        ItemBean item = itemDao.getItemById(id);
+
+        if (item == null || !item.getUserId().equals(userId)) {
+            return "redirect:/item/list";
+        }
+
+        model.addAttribute("item", item);
+        return ViewPaths.ITEM_EDIT;
+    }
+
+    @PostMapping("/item/edit")
+    public String updateItem(
+            @ModelAttribute ItemBean item,
+            @RequestParam("imageFile") MultipartFile imageFile,
+            HttpSession session
+    ) throws IOException {
+        Long userId = (Long) session.getAttribute("userId");
+
+        ItemBean oldItem = itemDao.getItemById(item.getId());
+        item.setUserId(userId);
+
+        if (!imageFile.isEmpty()) {
+            String newImage = ImageUploadUtil.replaceImage(imageFile, oldItem.getImage());
+            item.setImage(newImage);
+        } else {
+            item.setImage(oldItem.getImage()); // keep old image
+        }
+
+        itemDao.updateItem(item);
+        return "redirect:/item/list";
+    }
+
 
 
 }
