@@ -105,6 +105,21 @@ public class ItemController {
         itemDao.updateItem(item);
         return "redirect:/item/list";
     }
+    
+    @GetMapping("/item/delete")
+    public String deleteItem(@RequestParam("id") long itemId, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        
+        ItemBean item = itemDao.getItemById(itemId);
+        
+        if (item != null && item.getUserId().equals(userId)) {
+        	ImageUploadUtil.deleteImage(item.getImage()); // Optional
+            itemDao.deleteItem(itemId);
+        }
+
+        return "redirect:/item/list";
+    }
+
 
 
 

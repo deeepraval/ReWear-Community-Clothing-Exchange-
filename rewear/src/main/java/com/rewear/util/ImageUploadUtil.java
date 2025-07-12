@@ -64,4 +64,12 @@ public class ImageUploadUtil {
         newFile.transferTo(destination);
         return newFileName;
     }
+    
+    public static void deleteImage(String filename) {
+        File file = new File("src/main/webapp/uploads/" + filename);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
 }

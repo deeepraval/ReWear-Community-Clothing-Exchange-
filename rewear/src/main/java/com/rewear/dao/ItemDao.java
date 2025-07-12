@@ -40,6 +40,11 @@ public class ItemDao {
         stmt.update(sql, item.getName(), item.getDescription(), item.getCategory(),
                 item.getSize(), item.getCondition(), item.getImage(), item.getId());
     }
+    
+    public void deleteItem(long itemId) {
+        String sql = "DELETE FROM items WHERE id = ?";
+        stmt.update(sql, itemId);
+    }
 
 
 }
