@@ -1,11 +1,16 @@
 package com.rewear.controller;
 
+import com.rewear.bean.ItemBean;
 import com.rewear.bean.UserBean;
 import com.rewear.util.ViewPaths;
+import com.rewear.dao.ItemDao;
 import com.rewear.dao.UserDao;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +22,9 @@ public class UserController {
 
     @Autowired
     private UserDao userDao;
+    
+    @Autowired
+    ItemDao itemDao;
 
     // Show registration form
     @GetMapping("/register")
@@ -83,6 +91,15 @@ public class UserController {
         }
 
         model.addAttribute("userEmail", email);
+        
+     // Fetch user name for welcome message
+        Long userId = (Long) session.getAttribute("userId");
+        String userName = (String) session.getAttribute("userName");
+        model.addAttribute("userName", userName);
+
+        // Fetch available items for swap (excluding user's own)
+        List<ItemBean> availableItems = itemDao.getAvailableItemsForSwap(userId);
+        model.addAttribute("availableItems", availableItems);
         return ViewPaths.USER_DASHBOARD;
     }
 }

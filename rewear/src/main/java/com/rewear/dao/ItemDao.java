@@ -46,5 +46,9 @@ public class ItemDao {
         stmt.update(sql, itemId);
     }
 
+    public List<ItemBean> getAvailableItemsForSwap(Long excludeUserId) {
+        String sql = "SELECT * FROM items WHERE user_id != ?";
+        return stmt.query(sql, new BeanPropertyRowMapper<>(ItemBean.class), excludeUserId);
+    }
 
 }
